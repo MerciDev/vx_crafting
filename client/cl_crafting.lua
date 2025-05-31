@@ -307,7 +307,6 @@ end)
 local function ReplacePlaceholders(text, currentItemIndex, totalItems, recipeName, category, playerName)
     text = string.gsub(text, "%%quantity%%", tostring(totalItems))
     text = string.gsub(text, "%%name%%", tostring(recipeName))
-    text = string.gsub(text, "%%category%%", tostring(category))
     text = string.gsub(text, "%%current_item%%", tostring(currentItemIndex))
     text = string.gsub(text, "%%total_items%%", tostring(totalItems))
     text = string.gsub(text, "%%player_name%%", tostring(playerName))
@@ -378,7 +377,7 @@ RegisterNetEvent('vx_crafting:client:craftingCancelled', function()
     TriggerNotification('Crafteo cancelado.', 'info')
 end)
 
-RegisterCommand(Vx_crafting.Config.CommandPrefix .. "craft", function(source, args, rawCommand)
+RegisterCommand(Vx_crafting.Config.CommandPrefix .. "ui", function(source, args, rawCommand)
     local craftingPointId = args[1]
     if craftingPointId then
         OpenCraftingUI(craftingPointId)

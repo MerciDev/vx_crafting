@@ -1,7 +1,7 @@
 Vx_crafting = Vx_crafting or {}
 
 Vx_crafting.Config = {
-    CommandPrefix = "vx_crafting",
+    CommandPrefix = "vx_crafting:",
     InteractionCooldown = 1000,
     InventorySystem = "ox_inventory",
     ProgressBar = {

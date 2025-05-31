@@ -162,16 +162,17 @@ Puedes usar los siguientes placeholders en los mensajes de rol:
 - `%label%`: Etiqueta del ítem  
 - `%quantity%`: Cantidad total a craftear  
 - `%current_item%`: Número actual del ítem que se está crafteando
+- `%player_name%`: Nombre del jugador que está crafteando
 
 🎮 **Uso**
 
 **Comandos del Jugador**  
-`/vx_craftingcraft` – Abre la interfaz de crafteo (configurable en `config.lua`).
+`/vx_crafting:ui [id_interfaz]` – Abre la interfaz de crafteo (configurable en `config.lua`).
 
 **Comandos de Administrador**  
-`/vx_learnrecipe [id_receta]` – Enseña una receta al jugador.
+`/vx_crafting:learn [id_jugador] [id_receta]` – Enseña una receta al jugador.
 
 **Aprendizaje de Recetas (Función Exportada)**  
 ```lua
-exports['vx_crafting']:LearnRecipe(source, 'water_jug')
+exports['vx_crafting']:LearnRecipe(source, 1, 'water_jug')
 ```

@@ -318,8 +318,8 @@ RegisterNetEvent('vx_crafting:server:cancelCrafting', function()
     end
 end)
 
-function LearnRecipe(source, recipeId)
-    local Player = QBCore.Functions.GetPlayer(source)
+function LearnRecipe(source, playerId, recipeId)
+    local Player = QBCore.Functions.GetPlayer(playerId)
     if not Player then
         DebugPrint(string.format("^1[vx_crafting]^7 Error: Jugador no encontrado para aprender receta (ID: %s).", source))
         return false
@@ -359,15 +359,16 @@ end
 
 exports('LearnRecipe', LearnRecipe)
 
-RegisterCommand('learncraftingrecipe', function(source, args, rawCommand)
+RegisterCommand(Vx_crafting.Config.CommandPrefix .. 'learn', function(source, args, rawCommand)
     if source == 0 then
         DebugPrint("Este comando solo puede ser usado en el juego.")
         return
     end
-    local recipeId = args[1]
+    local playerId = args[1]
+    local recipeId = args[2]
     if not recipeId then
-        TriggerNotification(source, 'Uso: /learncraftingrecipe [recipe_id]', 'error')
+        TriggerNotification(source, 'Uso: /' .. Vx_crafting.Config.CommandPrefix .. 'learn' ..' [player_id] [recipe_id]', 'error')
         return
     end
-    LearnRecipe(source, recipeId)
+    LearnRecipe(source, playerId,  recipeId)
 end, true)
