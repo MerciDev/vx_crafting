@@ -14,6 +14,9 @@
     - [config.lua](#configlua)
     - [🧪 Ejemplo de Punto de Crafteo](#-ejemplo-de-punto-de-crafteo)
     - [📄 shared/crafting\_recipes.json](#-sharedcrafting_recipesjson)
+    - [🧪 **Propiedades de la Receta**](#-propiedades-de-la-receta)
+    - [🧩 Placeholders en Mensajes ME/DO](#-placeholders-en-mensajes-medo)
+    - [🎮 **Uso**](#-uso)
 
 ---
 
@@ -135,7 +138,7 @@ Vx_crafting.CraftingPoints = {
 }
 ```
 
-🧪 **Propiedades de la Receta**
+### 🧪 **Propiedades de la Receta**
 
 | Propiedad     | Tipo    | Descripción                                         |
 |---------------|---------|-----------------------------------------------------|
@@ -155,7 +158,8 @@ Vx_crafting.CraftingPoints = {
 | `repeat_start`| bool    | Si el mensaje de inicio se repite por cada unidad.  |
 | `repeat_end`  | bool    | Si el mensaje de fin se repite por cada unidad.     |
 
-🧩 Placeholders en Mensajes ME/DO  
+### 🧩 Placeholders en Mensajes ME/DO  
+
 Puedes usar los siguientes placeholders en los mensajes de rol:
 
 - `%name%`: Nombre del ítem  
@@ -164,7 +168,7 @@ Puedes usar los siguientes placeholders en los mensajes de rol:
 - `%current_item%`: Número actual del ítem que se está crafteando
 - `%player_name%`: Nombre del jugador que está crafteando
 
-🎮 **Uso**
+### 🎮 **Uso**
 
 **Comandos del Jugador**  
 `/vx_crafting:ui [id_interfaz]` – Abre la interfaz de crafteo (configurable en `config.lua`).
