@@ -14,9 +14,9 @@
     - [config.lua](#configlua)
     - [🧪 Ejemplo de Punto de Crafteo](#-ejemplo-de-punto-de-crafteo)
     - [📄 shared/crafting\_recipes.json](#-sharedcrafting_recipesjson)
-    - [🧪 **Propiedades de la Receta**](#-propiedades-de-la-receta)
+    - [🧪 Propiedades de la Receta](#-propiedades-de-la-receta)
     - [🧩 Placeholders en Mensajes ME/DO](#-placeholders-en-mensajes-medo)
-    - [🎮 **Uso**](#-uso)
+  - [🎮 Uso](#-uso)
 
 ---
 
