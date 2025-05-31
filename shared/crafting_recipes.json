@@ -1,0 +1,64 @@
+{
+  "water_jug": {
+    "id": "water_jug",
+    "name": "Water Jug",
+    "description": "A large container for water, useful for hydration.",
+    "category": "consumables",
+    "image": "water_jug.png",
+    "ingredients": [
+      {
+        "name": "water",
+        "label": "Water",
+        "amount": 1
+      }
+    ],
+    "output": {
+      "name": "water",
+      "label": "Water",
+      "amount": 10
+    },
+    "craftingTime": 20000,
+    "animation": {
+      "dict": "missmechanic",
+      "anim": "work2_base"
+    },
+    "freezePlayer": true,
+    "me_start": "comienza a llenar %quantity% %name%/s de agua.",
+    "repeat_start": false,
+    "me_end": "sella el  %name% y lo deja a un lado.",
+    "do_end": "se verian %current_item% %name%/s a un lado llenos de agua.",
+    "repeat_end": true
+  },
+  "water_carafe_8l": {
+    "id": "water_carafe_8l",
+    "name": "Water carafe (8L)",
+    "description": "A large container for water, useful for hydration.",
+    "category": "botanic_1",
+    "image": "water_carafe.png",
+    "ingredients": [
+      {
+        "name": "water",
+        "label": "Water",
+        "amount": 16,
+        "consumable": true,
+        "consumable_on_init": true
+      }
+    ],
+    "output": {
+      "name": "water",
+      "label": "Water carafe (8L)",
+      "amount": 1
+    },
+    "craftingTime": 20000,
+    "animation": {
+      "dict": "missmechanic",
+      "anim": "work2_base"
+    },
+    "freezePlayer": true,
+    "me_start": "comienza a llenar %quantity% %name%/s de agua.",
+    "repeat_start": false,
+    "me_end": "sella el  %name% y lo deja a un lado.",
+    "do_end": "se verian %current_item% %name%/s a un lado llenos de agua.",
+    "repeat_end": true
+  }
+}
