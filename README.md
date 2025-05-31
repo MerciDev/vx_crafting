@@ -1,97 +1,71 @@
-vx_crafting – Sistema de Crafteo Inmersivo para FiveM (QB-Core)
-vx_crafting es un sistema de crafteo inmersivo y altamente personalizable diseñado para servidores FiveM que utilizan QB-Core. Permite a los jugadores fabricar objetos en ubicaciones específicas del mapa, con recetas detalladas, animaciones únicas y mensajes de rol dinámicos.
+# ⚒️ vx_crafting – Sistema de Crafteo Inmersivo para FiveM (QB-Core)
 
-🧭 Tabla de Contenidos
-Características
+**vx_crafting** es un sistema de crafteo inmersivo y altamente personalizable diseñado para servidores FiveM que utilizan **QB-Core**. Permite a los jugadores fabricar objetos en ubicaciones específicas del mapa, con recetas detalladas, animaciones únicas y mensajes de rol dinámicos.
 
-Instalación
+---
 
-Configuración
+## 🧭 Tabla de Contenidos
 
-config.lua
+- [⚒️ vx\_crafting – Sistema de Crafteo Inmersivo para FiveM (QB-Core)](#️-vx_crafting--sistema-de-crafteo-inmersivo-para-fivem-qb-core)
+  - [🧭 Tabla de Contenidos](#-tabla-de-contenidos)
+  - [🛠️ Características](#️-características)
+  - [📦 Instalación](#-instalación)
+  - [⚙️ Configuración](#️-configuración)
+    - [config.lua](#configlua)
+    - [🧪 Ejemplo de Punto de Crafteo](#-ejemplo-de-punto-de-crafteo)
+    - [📄 shared/crafting\_recipes.json](#-sharedcrafting_recipesjson)
 
-shared/crafting_recipes.json
+---
 
-Propiedades de la Receta
+## 🛠️ Características
 
-Placeholders en Mensajes ME/DO
+- **Puntos de Crafteo Configurables:** Define ubicaciones específicas con blips, marcadores y objetos 3D personalizables.  
+- **Recetas Flexibles:** Múltiples ingredientes, tiempos, animaciones y mensajes de rol por receta.  
+- **Sistema de Aprendizaje:** Las recetas deben ser aprendidas antes de craftearse.  
+- **UI NUI Moderna:** Interfaz intuitiva y elegante.  
+- **Compatibilidad de Inventario:** Soporte para `ox_inventory` y `qbcore`.  
+- **Notificaciones Personalizables:** Usa `ox_lib` o `QBCore:Notify`.  
+- **Animaciones y Congelación:** Totalmente personalizable por receta.  
+- **Mensajes ME/DO:** Rol dinámico con uso de *placeholders*.  
 
-fxmanifest.lua
+---
 
-Uso
+## 📦 Instalación
 
-Comandos del Jugador
+1. Clona o descarga este repositorio en tu carpeta `resources/`.  
+2. Asegúrate de tener `qb-core` y `ox_lib` instalados.  
+3. Añade esto en tu `server.cfg`:
+4. Importa la base de datos: ejecuta `player_crafting_recipes.sql` en tu MySQL.  
+5. Configura `config.lua` y `shared/crafting_recipes.json` a tus necesidades.  
+6. Asegúrate de que las imágenes de ítems estén en `shared/imgs/`.  
 
-Comandos de Administrador
+---
 
-Aprendizaje de Recetas
+## ⚙️ Configuración
 
-Estructura de Archivos
+### config.lua
 
-Contribuciones
-
-Licencia
-
-🛠️ Características
-Puntos de Crafteo Configurables: Define ubicaciones específicas con blips, marcadores y objetos 3D personalizables.
-
-Recetas Flexibles: Múltiples ingredientes, tiempos, animaciones y mensajes de rol por receta.
-
-Sistema de Aprendizaje: Las recetas deben ser aprendidas antes de craftearse.
-
-UI NUI Moderna: Interfaz intuitiva y elegante.
-
-Compatibilidad de Inventario: Soporte para ox_inventory y qbcore.
-
-Notificaciones Personalizables: Usa ox_lib o QBCore:Notify.
-
-Animaciones y Congelación: Totalmente personalizable por receta.
-
-Mensajes ME/DO: Rol dinámico con uso de placeholders.
-
-📦 Instalación
-Clona o descarga este repositorio en tu carpeta resources/.
-
-Asegúrate de tener qb-core y ox_lib instalados.
-
-Añade esto en tu server.cfg:
-
-c
-Copiar
-Editar
-ensure ox_lib
-ensure qb-core
-ensure vx_crafting
-Importa la base de datos: ejecuta player_crafting_recipes.sql en tu MySQL.
-
-Configura config.lua y shared/crafting_recipes.json a tus necesidades.
-
-Asegúrate de que las imágenes de ítems estén en shared/imgs/.
-
-⚙️ Configuración
-config.lua
-lua
-Copiar
-Editar
+```lua
 Vx_crafting = Vx_crafting or {}
 
 Vx_crafting.Config = {
-    CommandPrefix = "vx_crafting",
-    InteractionCooldown = 1000,
-    InventorySystem = "ox_inventory",
-    ProgressBar = {
-        TimePerItem = 2000,
-        CancelKey = 73,
-    },
-    NotificationSystem = "ox_lib",
-    NotificationDuration = 5000,
-    DebugMode = false,
-    UseDrawText3D = false,
+ CommandPrefix = "vx_crafting",
+ InteractionCooldown = 1000,
+ InventorySystem = "ox_inventory",
+ ProgressBar = {
+     TimePerItem = 2000,
+     CancelKey = 73,
+ },
+ NotificationSystem = "ox_lib",
+ NotificationDuration = 5000,
+ DebugMode = false,
+ UseDrawText3D = false,
 }
-Ejemplo de Punto de Crafteo
-lua
-Copiar
-Editar
+```
+
+### 🧪 Ejemplo de Punto de Crafteo
+
+```lua
 Vx_crafting.CraftingPoints = {
   ["botanic"] = {
     coords = vector3(7399.91, 7347.83, 15.57),
@@ -120,10 +94,11 @@ Vx_crafting.CraftingPoints = {
     },
   },
 }
-shared/crafting_recipes.json
-json
-Copiar
-Editar
+```
+
+### 📄 shared/crafting_recipes.json
+
+```json
 {
   "water_jug": {
     "id": "water_jug",
@@ -158,92 +133,45 @@ Editar
     "repeat_end": true
   }
 }
-🧪 Propiedades de la Receta
-Propiedad	Tipo	Descripción
-id	string	Identificador único de la receta.
-name	string	Nombre visible de la receta.
-description	string	Descripción breve.
-category	string	Categoría usada para filtrar recetas por punto.
-image	string	Imagen del ítem de salida (ubicada en shared/imgs/).
-ingredients	array	Lista de ingredientes (ver formato más arriba).
-output	object	Ítem resultante con name, label, y amount.
-craftingTime	number	Tiempo de crafteo por unidad (ms).
-animation	object	Diccionario y nombre de la animación.
-freezePlayer	bool	Si se congela al jugador durante el proceso.
-me_start, me_end	string	Mensajes de rol /me.
-do_end	string	Mensaje de rol /do.
-repeat_*	bool	Si los mensajes se repiten por cada unidad crafteada.
+```
 
-🧩 Placeholders en Mensajes ME/DO
+🧪 **Propiedades de la Receta**
+
+| Propiedad     | Tipo    | Descripción                                         |
+|---------------|---------|-----------------------------------------------------|
+| `id`          | string  | Identificador único de la receta.                   |
+| `name`        | string  | Nombre visible de la receta.                         |
+| `description` | string  | Descripción breve.                                   |
+| `category`    | string  | Categoría usada para filtrar recetas por punto.     |
+| `image`       | string  | Imagen del ítem de salida (ubicada en `shared/imgs/`). |
+| `ingredients` | array   | Lista de ingredientes (ver formato más arriba).     |
+| `output`      | object  | Ítem resultante con `name`, `label`, y `amount`.    |
+| `craftingTime`| number  | Tiempo de crafteo por unidad (ms).                   |
+| `animation`   | object  | Diccionario y nombre de la animación.                |
+| `freezePlayer`| bool    | Si se congela al jugador durante el proceso.        |
+| `me_start`    | string  | Mensaje de rol `/me` al comenzar.                    |
+| `me_end`      | string  | Mensaje de rol `/me` al terminar.                    |
+| `do_end`      | string  | Mensaje de rol `/do` al terminar.                    |
+| `repeat_start`| bool    | Si el mensaje de inicio se repite por cada unidad.  |
+| `repeat_end`  | bool    | Si el mensaje de fin se repite por cada unidad.     |
+
+🧩 Placeholders en Mensajes ME/DO  
 Puedes usar los siguientes placeholders en los mensajes de rol:
 
-%name%: Nombre del ítem
+- `%name%`: Nombre del ítem  
+- `%label%`: Etiqueta del ítem  
+- `%quantity%`: Cantidad total a craftear  
+- `%current_item%`: Número actual del ítem que se está crafteando
 
-%label%: Etiqueta del ítem
+🎮 **Uso**
 
-%quantity%: Cantidad total a craftear
+**Comandos del Jugador**  
+`/vx_craftingcraft` – Abre la interfaz de crafteo (configurable en `config.lua`).
 
-%current_item%: Número actual del ítem que se está crafteando
+**Comandos de Administrador**  
+`/vx_learnrecipe [id_receta]` – Enseña una receta al jugador.
 
-📄 fxmanifest.lua
-Asegúrate de que el archivo fxmanifest.lua contenga las dependencias y archivos necesarios:
-
-lua
-Copiar
-Editar
-fx_version 'cerulean'
-game 'gta5'
-
-description 'vx_crafting - Sistema de Crafteo Inmersivo para QB-Core'
-author 'TuNombre'
-
-shared_scripts {
-  '@ox_lib/init.lua',
-  'shared/*.lua',
-  'shared/*.json'
-}
-
-client_scripts {
-  'client/*.lua'
-}
-
-server_scripts {
-  'server/*.lua'
-}
-
-lua54 'yes'
-🎮 Uso
-Comandos del Jugador
-/vx_craftingcraft – Abre la interfaz de crafteo (configurable en config.lua).
-
-Comandos de Administrador
-/vx_learnrecipe [id_receta] – Enseña una receta al jugador.
-
-Aprendizaje de Recetas (Función Exportada)
-lua
-Copiar
-Editar
+**Aprendizaje de Recetas (Función Exportada)**  
+```lua
 exports['vx_crafting']:LearnRecipe(source, 'water_jug')
-📁 Estructura de Archivos
-pgsql
-Copiar
-Editar
-vx_crafting/
-│
-├── client/
-│   └── main.lua
-├── server/
-│   └── main.lua
-├── shared/
-│   ├── config.lua
-│   ├── crafting_recipes.json
-│   └── imgs/
-├── ui/
-│   └── index.html
-├── fxmanifest.lua
-└── player_crafting_recipes.sql
-🤝 Contribuciones
-Las contribuciones son bienvenidas. Por favor, abre un Pull Request o reporta un problema mediante Issues si encuentras errores o tienes sugerencias.
-
-📜 Licencia
-Este recurso está licenciado bajo la MIT License.
+```
