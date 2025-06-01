@@ -14,9 +14,9 @@
     - [config.lua](#configlua)
     - [🧪 Ejemplo de Punto de Crafteo](#-ejemplo-de-punto-de-crafteo)
     - [📄 shared/crafting\_recipes.json](#-sharedcrafting_recipesjson)
-    - [🧪 Propiedades de la Receta](#-propiedades-de-la-receta)
+    - [🧪 **Propiedades de la Receta**](#-propiedades-de-la-receta)
     - [🧩 Placeholders en Mensajes ME/DO](#-placeholders-en-mensajes-medo)
-  - [🎮 Uso](#-uso)
+    - [🎮 **Uso**](#-uso)
 
 ---
 
@@ -150,7 +150,7 @@ Vx_crafting.CraftingPoints = {
 | `ingredients` | array   | Lista de ingredientes (ver formato más arriba).     |
 | `output`      | object  | Ítem resultante con `name`, `label`, y `amount`.    |
 | `craftingTime`| number  | Tiempo de crafteo por unidad (ms).                   |
-| `animation`   | object  | Diccionario y nombre de la animación.                |
+| `animation`   | object  | Diccionario y nombre de la animación. Permite escenario con `isScenario` y `scenario`|
 | `freezePlayer`| bool    | Si se congela al jugador durante el proceso.        |
 | `me_start`    | string  | Mensaje de rol `/me` al comenzar.                    |
 | `me_end`      | string  | Mensaje de rol `/me` al terminar.                    |

@@ -1,56 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>vx_crafting - Crafting</title>
+    <title>vx_crafting - Mesa de Crafteo Arcana</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="font-inter flex items-center justify-center h-screen hidden">
-    <div id="craftingContainer" class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-4xl border border-gray-700 transform scale-95 transition-transform duration-300 ease-out opacity-0">
-        <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
-            <h1 class="text-3xl font-bold text-white">vx_crafting - Crafting Station</h1>
-            <button id="closeCrafting" class="text-gray-400 hover:text-red-500 transition-colors duration-200 text-3xl font-light leading-none">
+<body class="font-inter flex items-center justify-center h-screen hidden tailwind-override">
+    <div id="craftingContainer" class="bg-magic-secondary p-6 sm:p-8 rounded-xl shadow-magic w-full max-w-5xl border border-magic transform scale-95 transition-transform duration-300 ease-out opacity-0">
+        <div class="flex justify-between items-center mb-6 border-b border-magic pb-4">
+            <h1 class="text-2xl sm:text-3xl font-bold text-magic-primary" id="craftingStationName">Mesa de Crafteo Arcana</h1>
+            <button id="closeCrafting" class="text-magic-secondary hover:text-red-500 transition-colors duration-200 text-3xl font-light leading-none">
                 &times;
             </button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="md:col-span-2 bg-gray-700 p-4 rounded-lg shadow-inner flex flex-col">
-                <h2 class="text-xl font-semibold text-white mb-4">Available Recipes</h2>
-                <div id="recipeGrid" class="flex-grow overflow-y-auto pr-2 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 custom-scrollbar">
+            <div class="md:col-span-2 bg-magic-tertiary p-4 rounded-lg shadow-inner-magic flex flex-col">
+                <h2 class="text-xl font-semibold text-magic-primary mb-4">Recetas Disponibles</h2>
+                <div id="recipeGrid" class="flex-grow overflow-y-auto pr-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 custom-scrollbar">
                 </div>
             </div>
 
-            <div class="md:col-span-1 bg-gray-700 p-4 rounded-lg shadow-inner flex flex-col">
-                <h2 class="text-xl font-semibold text-white mb-4">Recipe Details</h2>
+            <div class="md:col-span-1 bg-magic-tertiary p-4 rounded-lg shadow-inner-magic flex flex-col">
+                <h2 class="text-xl font-semibold text-magic-primary mb-4">Detalles de la Receta</h2>
                 <div id="recipeDetails" class="flex-grow flex flex-col justify-between hidden">
                     <div>
-                        <img id="detailRecipeImage" src="/shared/imgs/unknown.png" alt="Item Image" class="w-24 h-24 object-contain mx-auto mb-4 rounded-md">
-                        <h3 class="text-xl font-bold text-white mb-2 text-center" id="detailRecipeName"></h3>
-                        <p class="text-gray-300 text-sm mb-4" id="detailRecipeDescription"></p>
+                        <img id="detailRecipeImage" src="/shared/imgs/unknown.png" alt="Imagen del Objeto" class="w-24 h-24 object-contain mx-auto mb-3 rounded-md border border-magic-accent-gold">
+                        <h3 class="text-xl font-bold text-magic-primary mb-1 text-center" id="detailRecipeName">Nombre de la Receta</h3>
+                        <p class="text-magic-secondary text-sm mb-3 text-center" id="detailRecipeDescription">Descripción de la receta...</p>
+
+                        <div class="flex items-center justify-center text-magic-secondary text-sm mb-3" id="craftTimeContainer">
+                            <svg class="clock-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path>
+                                <path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586V7z"></path>
+                            </svg>
+                            <span id="detailRecipeCraftTime">Calculando tiempo...</span>
+                        </div>
+
                         <div class="mb-4">
-                            <h4 class="text-lg font-semibold text-white mb-2">Ingredients:</h4>
-                            <ul id="detailRecipeIngredients" class="list-disc list-inside text-gray-300 text-sm space-y-1">
+                            <h4 class="text-lg font-semibold text-magic-primary mb-2">Ingredientes:</h4>
+                            <ul id="detailRecipeIngredients" class="space-y-2 text-magic-secondary text-sm">
+                            </ul>
+                        </div>
+
+                        <div class="mb-4">
+                            <h4 class="text-lg font-semibold text-magic-primary mb-2">Resultado:</h4>
+                            <ul id="detailRecipeOutput" class="space-y-2 text-magic-secondary text-sm">
                             </ul>
                         </div>
                     </div>
 
-                    <div id="quantityInputContainer" class="flex items-center justify-center mb-4">
-                        <button id="decreaseQuantity" class="bg-gray-600 text-white px-3 py-1 rounded-l-md hover:bg-gray-500 transition-colors duration-200 text-xl font-bold">-</button>
-                        <input type="number" id="craftQuantity" value="1" min="1" max="999" class="w-20 text-center bg-gray-900 text-white border border-gray-700 py-1 focus:outline-none focus:border-blue-500 text-lg">
-                        <button id="increaseQuantity" class="bg-gray-600 text-white px-3 py-1 rounded-r-md hover:bg-gray-500 transition-colors duration-200 text-xl font-bold">+</button>
+                    <div class="mt-auto">
+                        <div id="quantityInputContainer" class="flex items-center justify-center mb-4">
+                            <button id="decreaseQuantity" class="button-quantity accent-magic-secondary accent-magic-secondary-hover">-</button>
+                            <input type="number" id="craftQuantity" value="1" min="1" max="999" class="input-quantity">
+                            <button id="increaseQuantity" class="button-quantity accent-magic-secondary accent-magic-secondary-hover">+</button>
+                        </div>
+                        <button id="craftSelectedButton" class="button-craft">Craftear</button>
                     </div>
-
-                    <button id="craftSelectedButton" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold text-lg hover:bg-blue-700 transition-colors duration-200 mt-auto">Craft</button>
                 </div>
-                <div id="noRecipeSelected" class="text-gray-400 text-center py-10">Select a recipe to view details.</div>
+                <div id="noRecipeSelected" class="text-magic-secondary text-center py-10">Selecciona una receta para ver sus detalles.</div>
             </div>
         </div>
     </div>
-
+    <div id="imageTooltip" class="hidden fixed bg-magic-tertiary p-2 rounded-lg shadow-lg border border-magic-accent-gold z-50">
+        <img id="tooltipImage" src="" alt="Imagen de ingrediente ampliada" class="w-32 h-32 object-contain rounded-md">
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

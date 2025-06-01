@@ -191,6 +191,7 @@ RegisterNetEvent('vx_crafting:server:craftItem', function(recipeId, craftingPoin
 
         local freezePlayer = recipe.freezePlayer or false
 
+        -- Pasar isScenario y scenario al cliente
         TriggerClientEvent('vx_crafting:client:syncPlayCraftingAnimation', -1, src, animationData, freezePlayer)
 
         for i = 1, quantity do
@@ -285,10 +286,15 @@ RegisterNetEvent('vx_crafting:server:craftItem', function(recipeId, craftingPoin
             TriggerClientEvent('vx_crafting:client:triggerMeDoEnd', src, i, quantity, me_end, do_end, repeat_end,
                 Player.PlayerData.name, recipe.name, recipe.category)
 
-            if currentInventorySystem == "ox_inventory" then
-                exports['ox_inventory']:AddItem(src, recipe.output.name, recipe.output.amount)
-            else
-                Player.Functions.AddItem(recipe.output.name, recipe.output.amount)
+            -- Manejar múltiples outputs
+            if recipe.output and #recipe.output > 0 then
+                for _, outputItem in ipairs(recipe.output) do
+                    if currentInventorySystem == "ox_inventory" then
+                        exports['ox_inventory']:AddItem(src, outputItem.name, outputItem.amount)
+                    else
+                        Player.Functions.AddItem(outputItem.name, outputItem.amount)
+                    end
+                end
             end
 
             PlayerCraftingStatus[src].currentCrafted = i

@@ -1,30 +1,75 @@
-/* style.css */
+:root {
+    --color-bg-primary: #0a0a12;
+    --color-bg-secondary: #141422;
+    --color-bg-tertiary: #1f1f30;
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #AFE7FA; /* AFE7FA */
+    --color-accent-primary: #3D88C0; /* 3D88C0 */
+    --color-accent-primary-hover: #57a8e0;
+    --color-accent-secondary: #5091cd;
+    --color-accent-secondary-hover: #304e7a;
+    --color-accent-gold: #FFD700; /* Se mantiene para referencia, pero no se usará en los detalles */
+    --color-accent-gold-hover: #FFE033; /* Se mantiene para referencia */
+    --color-border: var(--color-accent-primary); /* Cambiado de gold a accent-primary */
+    --color-border-alt: #3D88C0;
+    --color-shadow-primary-rgb: 61, 136, 192; /* RGB de 3D88C0 */
+    --color-shadow-secondary-rgb: 175, 231, 250; /* RGB de AFE7FA */
+    --color-accent-primary-rgb: 61, 136, 192; /* Añadido para rgba */
+}
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+    background-color: transparent;
+}
+
+body.active {
+    display: flex;
+}
+
+.bg-magic-primary { background-color: var(--color-bg-primary); }
+.bg-magic-secondary { background-color: var(--color-bg-secondary); }
+.bg-magic-tertiary { background-color: var(--color-bg-tertiary); }
+.text-magic-primary { color: var(--color-text-primary); }
+.text-magic-secondary { color: var(--color-text-secondary); }
+.border-magic { border-color: var(--color-border); }
+.border-magic-accent-gold { border-color: var(--color-accent-primary); } /* Cambiado de gold a accent-primary */
+
+.accent-magic-primary { background-color: var(--color-accent-primary); color: var(--color-text-primary); }
+.accent-magic-primary-hover:hover { background-color: var(--color-accent-primary-hover); }
+.accent-magic-secondary { background-color: var(--color-accent-secondary); color: var(--color-text-primary); }
+.accent-magic-secondary-hover:hover { background-color: var(--color-accent-secondary-hover); }
+.accent-magic-gold { background-color: var(--color-accent-gold); color: var(--color-bg-primary); } /* Se mantiene, pero no se usará en los detalles */
+.accent-magic-gold-hover:hover { background-color: var(--color-accent-gold-hover); } /* Se mantiene */
+
+.shadow-magic {
+    box-shadow: 0 0 20px rgba(var(--color-shadow-primary-rgb), 0.7),
+                0 0 35px rgba(var(--color-shadow-secondary-rgb), 0.3),
+                inset 0 0 10px rgba(var(--color-shadow-primary-rgb), 0.4);
+    border-radius: 0.75rem;
+}
+
+.shadow-inner-magic {
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
     width: 8px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: #4a5568;
+    background: var(--color-bg-secondary);
     border-radius: 10px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #6b7280;
+    background: var(--color-accent-primary); /* Cambiado de gold a accent-primary */
     border-radius: 10px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #9ca3af;
-}
-
-body.active {
-    display: flex;
+    background: var(--color-accent-primary-hover); /* Cambiado de gold-hover a accent-primary-hover */
 }
 
 #craftingContainer.show {
@@ -33,30 +78,124 @@ body.active {
 }
 
 .recipe-card {
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid transparent;
+    transition: all 0.2s ease-in-out;
     aspect-ratio: 1 / 1;
+    padding-bottom: 3px;
+}
+.recipe-card:hover {
+    border-color: var(--color-accent-primary); /* Cambiado de gold a accent-primary */
+}
+.recipe-card.selected-recipe-card {
+    border-color: var(--color-accent-primary); /* Cambiado de gold a accent-primary */
+}
+.recipe-card img {
+    border: 1px solid rgba(var(--color-accent-primary-rgb), 0.3); /* Cambiado de gold a accent-primary-rgb */
+}
+
+.clock-icon {
+    width: 1.1em;
+    height: 1.1em;
+    vertical-align: -0.15em;
+    fill: var(--color-accent-primary); /* Cambiado de gold a accent-primary */
+    margin-right: 0.4em;
+}
+
+.ingredient-item {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 0.75rem;
-    min-width: 120px;
-    box-sizing: border-box;
+    padding: 4px 0;
+}
+.ingredient-image {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    margin-right: 10px;
+    border-radius: 4px;
+    background-color: rgba(var(--color-text-primary-rgb, 255, 255, 255), 0.05);
+    border: 1px solid rgba(var(--color-accent-primary-rgb), 0.4); /* Cambiado de gold a accent-primary-rgb */
 }
 
-.recipe-card h3 {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
+/* Estilos para el tooltip de la imagen */
+#imageTooltip {
+    position: fixed; /* Asegura que el tooltip flote sobre todo */
+    pointer-events: none; /* Permite que los eventos de ratón pasen a través del tooltip */
+    transition: opacity 0.2s ease-in-out;
+    opacity: 0; /* Oculto por defecto */
+    border-color: var(--color-accent-primary); /* Cambiado de gold a accent-primary */
+}
+
+#imageTooltip.show {
+    opacity: 1; /* Visible cuando se le añade la clase 'show' */
+}
+
+
+.button-quantity {
+    background-color: var(--color-accent-secondary);
+    color: var(--color-text-primary);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    font-weight: bold;
+    font-size: 1.125rem;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+.button-quantity:first-child { border-top-right-radius: 0; border-bottom-right-radius: 0;}
+.button-quantity:last-child { border-top-left-radius: 0; border-bottom-left-radius: 0;}
+.button-quantity:hover {
+    background-color: var(--color-accent-secondary-hover);
+    color: var(--color-text-secondary); /* Color del texto en AFE7FA al hacer hover */
+}
+
+.input-quantity {
+    width: 4rem;
     text-align: center;
-}
-
-#craftQuantity {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-alt);
+    padding: 0.5rem 0;
+    font-size: 1rem;
     -moz-appearance: textfield;
 }
-
-#craftQuantity::-webkit-outer-spin-button,
-#craftQuantity::-webkit-inner-spin-button {
+.input-quantity::-webkit-outer-spin-button,
+.input-quantity::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+.input-quantity:focus {
+    outline: none;
+    border-color: var(--color-accent-primary); /* Cambiado de gold a accent-primary */
+    box-shadow: 0 0 0 2px rgba(var(--color-shadow-primary-rgb), 0.4);
+}
+
+.button-craft {
+    width: 100%;
+    background-color: var(--color-accent-primary); /* Cambiado de gold a accent-primary */
+    color: var(--color-bg-primary);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    font-size: 1.125rem;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.button-craft:hover {
+    background-color: var(--color-accent-primary-hover); /* Cambiado de gold-hover a accent-primary-hover */
+    box-shadow: 0 0 15px rgba(var(--color-shadow-primary-rgb), 0.6);
+}
+
+.tailwind-override .bg-gray-800 { background-color: var(--color-bg-secondary); }
+.tailwind-override .bg-gray-700 { background-color: var(--color-bg-tertiary); }
+.tailwind-override .text-white { color: var(--color-text-primary); }
+.tailwind-override .text-gray-300 { color: var(--color-text-secondary); }
+.tailwind-override .text-gray-400 { color: #9cb3c9; }
+.tailwind-override .border-gray-700 { border-color: var(--color-border-alt); }
+.tailwind-override .bg-blue-600 { background-color: var(--color-accent-primary); }
+.tailwind-override .hover\:bg-blue-700:hover { background-color: var(--color-accent-primary-hover); }
+.tailwind-override .bg-gray-600 { background-color: var(--color-bg-tertiary); }
+.tailwind-override .hover\:bg-gray-500:hover { background-color: #3a3a5f; }
+.tailwind-override .bg-gray-900 { background-color: var(--color-bg-primary); }
+.tailwind-override .border-blue-500 { border-color: var(--color-accent-primary); }
+.tailwind-override .hover\:text-red-500:hover { color: #FF6B6B; }

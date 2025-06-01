@@ -7,8 +7,7 @@ local spawnedObjects = {}
 
 local currentCraftingProgress = nil
 local isCraftingActive = false
-local activeOxTextUIId = false -- Variable para almacenar la referencia a ox_lib textUI
-local lastTextContent = ""   -- Para evitar actualizaciones innecesarias de ox_lib textUI
+local activeOxTextUIId = false
 
 local function DebugPrint(...)
     if Vx_crafting.Config.DebugMode then
@@ -78,6 +77,7 @@ end)
 
 local function OpenCraftingUI(craftingPointId)
     if IsUIOpen then return end
+    LoadCraftingRecipes()
 
     if isCraftingActive then
         TriggerNotification('Ya estás crafteando algo. Espera a que termine o cancela.', 'error')
@@ -89,7 +89,7 @@ local function OpenCraftingUI(craftingPointId)
     local craftingPoint = Vx_crafting.CraftingPoints[craftingPointId]
     if not craftingPoint then
         DebugPrint(string.format(
-        "^1[vx_crafting]^7 Punto de crafteo '%s' no encontrado en la configuración del cliente.", craftingPointId))
+            "^1[vx_crafting]^7 Punto de crafteo '%s' no encontrado en la configuración del cliente.", craftingPointId))
         return
     end
 
@@ -146,7 +146,8 @@ local function OpenCraftingUI(craftingPointId)
         SendNuiMessage(json.encode({
             type = 'openCraftingUI',
             recipes = knownRecipesInStation,
-            knownRecipes = playerKnownRecipes
+            knownRecipes = playerKnownRecipes,
+            craftingStationName = craftingPoint.name -- Enviar el nombre de la estación
         }))
     end)
 end
@@ -200,8 +201,7 @@ RegisterNuiCallback('cancelCrafting', function(data, cb)
     end
     if activeOxTextUIId then
         lib.hideTextUI(activeOxTextUIId)
-        activeOxTextUIId = nil
-        lastTextContent = ""
+        activeOxTextUIId = false
     end
     TriggerServerEvent('vx_crafting:server:cancelCrafting')
     cb(true)
@@ -217,29 +217,34 @@ lib.callback.register('vx_crafting:client:startSingleItemCrafting',
             FreezeEntityPosition(ped, true)
         end
 
-        if animationData and animationData.dict and animationData.anim then
-            RequestAnimDict(animationData.dict)
-            while not HasAnimDictLoaded(animationData.dict) do
-                Wait(0)
+        if animationData then
+            if animationData.isScenario then
+                if animationData.scenario and animationData.scenario ~= "" then
+                    TaskStartScenarioInPlace(ped, animationData.scenario, 0, true)
+                end
+            elseif animationData.dict and animationData.anim then
+                RequestAnimDict(animationData.dict)
+                while not HasAnimDictLoaded(animationData.dict) do
+                    Wait(0)
+                end
+                TaskPlayAnim(ped, animationData.dict, animationData.anim, 8.0, -8.0, -1, 49, 0, false, false, false)
             end
-            TaskPlayAnim(ped, animationData.dict, animationData.anim, 8.0, -8.0, -1, 49, 0, false, false, false)
         end
 
         if activeOxTextUIId then
             lib.hideTextUI(activeOxTextUIId)
-            activeOxTextUIId = nil
-            lastTextContent = ""
+            activeOxTextUIId = false
         end
 
         local currentTextUI = lib.showTextUI(
-        string.format('Pulsa %s para cancelar - Ítems restantes: %d/%d',
-            GetKeybindFromControl(Vx_crafting.Config.ProgressBar.CancelKey), currentItemIndex, totalItems), {
-            position = 'bottom-center',
-            style = {
-                color = 'white',
-                borderRadius = '10px',
-            }
-        })
+            string.format('Pulsa %s para cancelar - Ítems restantes: %d/%d',
+                GetKeybindFromControl(Vx_crafting.Config.ProgressBar.CancelKey), currentItemIndex, totalItems), {
+                position = 'bottom-center',
+                style = {
+                    color = 'white',
+                    borderRadius = '10px',
+                }
+            })
 
         local progressBarOptions = {
             duration = timePerItem,
@@ -257,8 +262,12 @@ lib.callback.register('vx_crafting:client:startSingleItemCrafting',
 
         local completedSuccessfully = lib.progressBar(progressBarOptions)
 
-        if animationData and animationData.dict and animationData.anim then
-            StopAnimTask(ped, animationData.dict, animationData.anim, 1.0)
+        if animationData then
+            if animationData.isScenario then
+                ClearPedTasksImmediately(ped)
+            elseif animationData.dict and animationData.anim then
+                StopAnimTask(ped, animationData.dict, animationData.anim, 1.0)
+            end
         end
         FreezeEntityPosition(ped, false)
 
@@ -279,12 +288,18 @@ RegisterNetEvent('vx_crafting:client:syncPlayCraftingAnimation', function(target
             FreezeEntityPosition(targetPed, true)
         end
 
-        if animationData and animationData.dict and animationData.anim then
-            RequestAnimDict(animationData.dict)
-            while not HasAnimDictLoaded(animationData.dict) do
-                Wait(0)
+        if animationData then
+            if animationData.isScenario then
+                if animationData.scenario and animationData.scenario ~= "" then
+                    TaskStartScenarioInPlace(targetPed, animationData.scenario, 0, true)
+                end
+            elseif animationData.dict and animationData.anim then
+                RequestAnimDict(animationData.dict)
+                while not HasAnimDictLoaded(animationData.dict) do
+                    Wait(0)
+                end
+                TaskPlayAnim(targetPed, animationData.dict, animationData.anim, 8.0, -8.0, -1, 49, 0, false, false, false)
             end
-            TaskPlayAnim(targetPed, animationData.dict, animationData.anim, 8.0, -8.0, -1, 49, 0, false, false, false)
         end
     end
 end)
@@ -297,8 +312,12 @@ RegisterNetEvent('vx_crafting:client:syncStopCraftingAnimation', function(target
 
     local targetPed = GetPlayerPed(targetPlayerId)
     if DoesEntityExist(targetPed) then
-        if animationData and animationData.dict and animationData.anim then
-            StopAnimTask(targetPed, animationData.dict, animationData.anim, 1.0)
+        if animationData then
+            if animationData.isScenario then
+                ClearPedTasksImmediately(targetPed)
+            elseif animationData.dict and animationData.anim then
+                StopAnimTask(targetPed, animationData.dict, animationData.anim, 1.0)
+            end
         end
         FreezeEntityPosition(targetPed, false)
     end
@@ -361,8 +380,7 @@ RegisterNetEvent('vx_crafting:client:craftingFinished', function()
     isCraftingActive = false
     if activeOxTextUIId then
         lib.hideTextUI(activeOxTextUIId)
-        activeOxTextUIId = nil
-        lastTextContent = ""
+        activeOxTextUIId = false
     end
     TriggerNotification('Crafteo completado.', 'success')
 end)
@@ -371,8 +389,7 @@ RegisterNetEvent('vx_crafting:client:craftingCancelled', function()
     isCraftingActive = false
     if activeOxTextUIId then
         lib.hideTextUI(activeOxTextUIId)
-        activeOxTextUIId = nil
-        lastTextContent = ""
+        activeOxTextUIId = false
     end
     TriggerNotification('Crafteo cancelado.', 'info')
 end)
@@ -382,7 +399,7 @@ RegisterCommand(Vx_crafting.Config.CommandPrefix .. "ui", function(source, args,
     if craftingPointId then
         OpenCraftingUI(craftingPointId)
     else
-        OpenCraftingUI("main_crafting_station")
+        OpenCraftingUI("main_crafting_station") -- Usar una estación predeterminada si no se especifica
     end
 end, false)
 
@@ -411,13 +428,13 @@ local function LoadAndCreateObject(point)
 
     if not IsModelInCdimage(modelHash) then
         DebugPrint(string.format(
-        "^1[vx_crafting]^7 Error: El modelo '%s' (hash: %s) NO existe en los archivos del juego para el punto de crafteo %s. Verifica el nombre del modelo o el hash.",
+            "^1[vx_crafting]^7 Error: El modelo '%s' (hash: %s) NO existe en los archivos del juego para el punto de crafteo %s. Verifica el nombre del modelo o el hash.",
             point.object.model, modelHash, point.id))
         return nil
     end
     if not IsModelValid(modelHash) then
         DebugPrint(string.format(
-        "^1[vx_crafting]^7 Error: El modelo '%s' (hash: %s) NO es un modelo válido para el punto de crafteo %s. Podría estar corrupto o no ser un prop.",
+            "^1[vx_crafting]^7 Error: El modelo '%s' (hash: %s) NO es un modelo válido para el punto de crafteo %s. Podría estar corrupto o no ser un prop.",
             point.object.model, modelHash, point.id))
         return nil
     end
@@ -429,7 +446,7 @@ local function LoadAndCreateObject(point)
         Wait(100)
         if (GetGameTimer() - startTime) > timeout then
             DebugPrint(string.format(
-            "^1[vx_crafting]^7 Error: El modelo '%s' (hash: %s) no se cargó a tiempo para el punto de crafteo %s. Asegúrate de que esté correctamente streameado y no sea demasiado grande.",
+                "^1[vx_crafting]^7 Error: El modelo '%s' (hash: %s) no se cargó a tiempo para el punto de crafteo %s. Asegúrate de que esté correctamente streameado y no sea demasiado grande.",
                 point.object.model, modelHash, point.id))
             return nil
         end
@@ -450,7 +467,7 @@ local function LoadAndCreateObject(point)
             SetEntityCoords(obj, point.coords.x, point.coords.y, finalZ, false, false, false, false)
         else
             DebugPrint(string.format(
-            "^3[vx_crafting - WARNING]^7 No se pudo encontrar el suelo para el objeto %s (hash: %s) en %s. Se usará la coordenada Z original.",
+                "^3[vx_crafting - WARNING]^7 No se pudo encontrar el suelo para el objeto %s (hash: %s) en %s. Se usará la coordenada Z original.",
                 point.object.model, modelHash, json.encode(point.coords)))
         end
     end
@@ -520,8 +537,7 @@ CreateThread(function()
         if Vx_crafting.Config.UseDrawText3D then
             if activeOxTextUIId then
                 lib.hideTextUI()
-                activeOxTextUIId = nil
-                lastTextContent = ""
+                activeOxTextUIId = false
             end
             if foundClosestPointThisTick then
                 DrawText3D(Vx_crafting.CraftingPoints[foundClosestPointThisTick].coords, textToShow)
@@ -566,11 +582,11 @@ AddEventHandler('onResourceStop', function(resourceName)
             if DoesEntityExist(obj) then
                 DeleteObject(obj)
             end
+        
         end
         if activeOxTextUIId then
             lib.hideTextUI(activeOxTextUIId)
-            activeOxTextUIId = nil
-            lastTextContent = ""
+            activeOxTextUIId = false
         end
     end
 end)
